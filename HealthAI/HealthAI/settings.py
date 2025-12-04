@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_)gdvcvs#kl9^tr6bpbax433z3bhwzpi4gjbgxeo%)odng%ivj'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-_)gdvcvs#kl9^tr6bpbax433z3bhwzpi4gjbgxeo%)odng%ivj')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['health-backend.liara.run']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'health-backend.liara.run,localhost,127.0.0.1').split(',')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'HealthAI.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # طبق URI در پنل، نام دیتابیس postgres هست
-        'USER': 'root',
-        'PASSWORD': '9RSaIdj00qgSV95VavQ0kdWy',
-        'HOST': 'manaslu.liara.cloud',
-        'PORT': '33485',
+        'NAME': os.getenv('DATABASE_NAME', 'postgres'),
+        'USER': os.getenv('DATABASE_USER', 'root'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', '9RSaIdj00qgSV95VavQ0kdWy'),
+        'HOST': os.getenv('DATABASE_HOST', 'manaslu.liara.cloud'),
+        'PORT': os.getenv('DATABASE_PORT', '33485'),
     }
 }
 
