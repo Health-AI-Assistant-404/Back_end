@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-_)gdvcvs#kl9^tr6bpbax433z3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'health-backend.liara.run,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'health.bazi.digital,localhost,127.0.0.1').split(',')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
