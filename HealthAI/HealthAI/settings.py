@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_)gdvcvs#kl9^tr6bpbax433z3bhwzpi4gjbgxeo%)odng%ivj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['health-backend.liara.run']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'account',
+    'corsheaders',
 ]
 
 
@@ -61,6 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'HealthAI.urls'
@@ -89,11 +92,11 @@ WSGI_APPLICATION = 'HealthAI.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # طبق URI در پنل، نام دیتابیس postgres هست
-        'USER': 'root',
-        'PASSWORD': '9RSaIdj00qgSV95VavQ0kdWy',
-        'HOST': 'manaslu.liara.cloud',
-        'PORT': '33485',
+        'NAME': 'healthai',
+        'USER': 'postgres',
+        'PASSWORD': '12345678',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
