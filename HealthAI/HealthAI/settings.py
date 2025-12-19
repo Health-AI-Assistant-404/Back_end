@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'chat',
     'channels',
+    'doctors',
 ]
 
 ASGI_APPLICATION = 'project.asgi.application'
