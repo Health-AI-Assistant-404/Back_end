@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'account',
     'corsheaders',
+    'chat',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'project.asgi.application'
 
 
 REST_FRAMEWORK = {
