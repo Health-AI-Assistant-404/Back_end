@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -57,3 +57,8 @@ def get_city_doctors(request, city_name):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
     
+@api_view(["GET"])
+def doctor_redirect(request, slug, doctor_id):
+    
+    target_url = f"https://doctoreto.com/doctor/{slug}/{doctor_id}?searchedFrom=headerKeyword"
+    return redirect(target_url)
