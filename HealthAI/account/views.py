@@ -52,16 +52,24 @@ class UserListView(ListAPIView):
     permission_classes = [IsAdminUser]   # فقط ادمین‌ها اجازه دارن
 
 
+# account/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserProfileSerializer
+
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = UserProfileSerializer(request.user)
+        profile = request.user.profile
+        serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
     def put(self, request):
-        serializer = UserProfileSerializer(request.user, data=request.data, partial=True)
+        profile = request.user.profile
+        serializer = UserProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Your profile edited.', 'data': serializer.data})
+            return Response({'message': 'اطلاعات پروفایل به‌روزرسانی شد', 'data': serializer.data})
         return Response(serializer.errors, status=400)
