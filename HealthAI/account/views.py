@@ -2,7 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .serializers import UserSignupSerializer, VerifyOTPSerializer
+from .serializers import (
+    UserSignupSerializer,
+    VerifyOTPSerializer,
+    ForgotPasswordSerializer,
+    ResetPasswordSerializer
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
@@ -77,6 +82,61 @@ class VerifyOTPAPI(APIView):
                 return Response({
                     'error': 'User not found.'
                 }, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForgotPasswordAPI(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+
+            # Generate OTP
+            otp_code = SMSService.generate_otp()
+
+            # Save OTP to database
+            OTP.objects.create(
+                username=username,
+                otp_code=otp_code
+            )
+
+            # Send OTP via SMS
+            success, message = SMSService.send_otp(username, otp_code)
+
+            if success:
+                return Response({
+                    'message': 'OTP sent to your phone number. Please use it to reset your password.',
+                    'username': username
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'error': f'Failed to send OTP: {message}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordAPI(APIView):
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user_instance']
+            otp_instance = serializer.validated_data['otp_instance']
+            new_password = serializer.validated_data['new_password']
+
+            # Update user password
+            user.set_password(new_password)
+            user.save()
+
+            # Mark OTP as used
+            otp_instance.is_used = True
+            otp_instance.save()
+
+            return Response({
+                'message': 'Password reset successfully. You can now login with your new password.',
+                'username': user.username
+            }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
