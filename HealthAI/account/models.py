@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 
+# account/models.py
+from django.db import models
+from django.contrib.auth.models import User
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -15,11 +19,10 @@ class UserProfile(models.Model):
         return self.user.username
 
 class OTP(models.Model):
-    username = models.CharField(max_length=150, db_index=True)
+    username = models.CharField(max_length=150)
     otp_code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-    is_used = models.BooleanField(default=False)
+
 
     class Meta:
         ordering = ['-created_at']

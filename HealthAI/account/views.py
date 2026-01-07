@@ -15,44 +15,40 @@ from .serializers import UserProfileSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import UserProfile
+from .serializers import UserProfileSerializer
 from .models import OTP
 from .sms_service import SMSService
+from rest_framework import status
+from django.contrib.auth.models import User
+from .serializers import UserSignupSerializer
+from .models import OTP, UserProfile
+from .serializers import UserProfileSerializer
+from rest_framework.permissions import IsAuthenticated
 
+# سرویس فرضی برای ارسال OTP
+class SMSService:
+    @staticmethod
+    def generate_otp():
+        import random
+        return str(random.randint(100000, 999999))
 
-
-
+    @staticmethod
+    def send_otp(username, otp_code):
+        # اینجا باید سرویس واقعی SMS وصل بشه
+        print(f"Send OTP {otp_code} to {username}")
+        return True, "OTP sent"
 
 class SignupAPI(APIView):
     def post(self, request):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-
-            # Generate OTP
-            otp_code = SMSService.generate_otp()
-
-            # Save OTP to database
-            OTP.objects.create(
-                username=user.username,
-                otp_code=otp_code
-            )
-
-            # Send OTP via SMS
-            success, message = SMSService.send_otp(user.username, otp_code)
-
-            if success:
-                return Response({
-                    'message': 'OTP sent to your phone number. Please verify to complete registration.',
-                    'username': user.username
-                }, status=status.HTTP_201_CREATED)
-            else:
-                # If SMS fails, delete the user and OTP
-                user.delete()
-                return Response({
-                    'error': f'Failed to send OTP: {message}'
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Sign up is successful", "username": user.username}, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class VerifyOTPAPI(APIView):
@@ -170,22 +166,17 @@ class UserListView(ListAPIView):
     permission_classes = [IsAdminUser]   # فقط ادمین‌ها اجازه دارن
 
 
-# account/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        profile = request.user.profile
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
     def put(self, request):
-        profile = request.user.profile
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
         serializer = UserProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
