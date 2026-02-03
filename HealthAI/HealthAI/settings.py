@@ -93,16 +93,38 @@ WSGI_APPLICATION = 'HealthAI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DATABASE_NAME', 'postgres'),
+#         'USER': os.getenv('DATABASE_USER', 'root'),
+#         'PASSWORD': os.getenv('DATABASE_PASSWORD', '9RSaIdj00qgSV95VavQ0kdWy'),
+#         'HOST': os.getenv('DATABASE_HOST', 'manaslu.liara.cloud'),
+#         'PORT': os.getenv('DATABASE_PORT', '33485'),
+#     }
+# }
+
+# settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME', 'postgres'),
-        'USER': os.getenv('DATABASE_USER', 'root'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', '9RSaIdj00qgSV95VavQ0kdWy'),
-        'HOST': os.getenv('DATABASE_HOST', 'manaslu.liara.cloud'),
-        'PORT': os.getenv('DATABASE_PORT', '33485'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'my_local_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'your_password',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
