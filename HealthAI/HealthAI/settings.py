@@ -30,7 +30,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'health.bazi.digital,localhost,127.0.
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-OPENAI_API_KEY = "sk-xxxx"
+OPENAI_API_KEY = "sk-426cc6e9a3854579addedddd4aa111f6"
 
 # Application definition
 
